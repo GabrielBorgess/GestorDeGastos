@@ -1,16 +1,14 @@
 import prisma from "@/app/lib/prisma";
-import { Account, AuthOptions, Profile, Session, User } from "next-auth";
+import { AuthOptions } from "next-auth";
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { JWT } from "next-auth/jwt";
 import NextAuth from "next-auth/next";
 
 export const authOptions: AuthOptions = {
     providers: [
         CredentialsProvider({
             name: 'credentials',
-            
             credentials: {
                 email: {
                     label: 'Email',
@@ -23,7 +21,7 @@ export const authOptions: AuthOptions = {
                 }
             },
             authorize: async (credentials) => {
-                if(!credentials) {
+                if (!credentials) {
                     return null;
                 }
 
@@ -35,7 +33,7 @@ export const authOptions: AuthOptions = {
                     }
                 });
 
-                if(!user) {
+                if (!user) {
                     return null;
                 }
 
@@ -43,14 +41,14 @@ export const authOptions: AuthOptions = {
 
                 const isValidPassword = bcrypt.compareSync(password, userPassword);
 
-                if(!isValidPassword) {
+                if (!isValidPassword) {
                     return null;
                 }
 
                 return {
-                  ...user,
-                  id: user.id.toString()
-                }
+                    ...user,
+                    id: user.id.toString()
+                };
             }
         })
     ],
@@ -60,18 +58,18 @@ export const authOptions: AuthOptions = {
     },
     secret: process.env.NEXTAUTH_SECRET,
     jwt: {
-        async encode({secret, token}) {
-            if(!token) {
+        async encode({ secret, token }) {
+            if (!token) {
                 throw new Error('No token to encode');
             }
             return jwt.sign(token, secret);
         },
-        async decode({secret, token}) {
-            if(!token) {
+        async decode({ secret, token }) {
+            if (!token) {
                 throw new Error('No token to decode');
             }
             const decodedToken = jwt.verify(token, secret);
-            if(typeof decodedToken === 'string') {
+            if (typeof decodedToken === 'string') {
                 return JSON.parse(decodedToken);
             } else {
                 return decodedToken;
@@ -84,25 +82,19 @@ export const authOptions: AuthOptions = {
         updateAge: 24 * 60 * 60,
     },
     callbacks: {
-        async session(params: {session: Session; token: JWT; user: User}) {
-            if(params.session.user) {
-                params.session.user.email = params.token.email;
-            }           
-
-            return params.session;
-        },
-        async jwt(params: {
-            token: JWT;
-            user?: User | undefined;
-            account?: Account | null | undefined;
-            profile?: Profile | undefined;
-            isNewUser?: boolean | undefined;
-        }) {
-            if(params.user) {
-                params.token.email = params.user.email;
+        async session({ session, token }) {
+            if (session.user) {
+                session.user.id = token.id as string;
+                session.user.email = token.email as string;
             }
-
-            return params.token;
+            return session;
+        },
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id;
+                token.email = user.email;
+            }
+            return token;
         }
     }
 }
