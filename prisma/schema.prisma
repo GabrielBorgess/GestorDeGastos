@@ -9,33 +9,30 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String   // Você pode usar um hash para armazenar as senhas de forma segura
-  months    Month[]  // Relação com os meses que pertencem ao usuário
+  id           Int     @id @default(autoincrement())
+  name         String
+  email        String  @unique
+  passwordHash String
+  months       Month[]
 }
 
 model Month {
-  id         Int       @id @default(autoincrement())
-  name       String    // Nome do mês (ex: "Janeiro 2024")
-  income     Float     // Valor do dinheiro que entrou no mês
-  userId     Int       // FK para o usuário
-  user       User      @relation(fields: [userId], references: [id])
-  expenses   Expense[] // Relação com os gastos do mês
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id        Int       @id @default(autoincrement())
+  name      String
+  income    Float
+  userId    Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expenses  Expense[]
+  user      User      @relation(fields: [userId], references: [id])
 }
 
 model Expense {
-  id        Int      @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   description String
-  amount    Float    // Valor do gasto
-  monthId   Int      // FK para o mês ao qual o gasto pertence
-  month     Month    @relation(fields: [monthId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  amount      Float
+  monthId     Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  month       Month    @relation(fields: [monthId], references: [id])
 }
-
-
-
