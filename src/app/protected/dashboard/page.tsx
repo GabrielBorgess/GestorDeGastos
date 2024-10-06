@@ -1,7 +1,7 @@
 import { PlusIcon } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { authOptions } from '@/utils/authOptions';
 import MonthsContainer from '@/app/components/MonthsContainer'
 import Link from 'next/link'
 
