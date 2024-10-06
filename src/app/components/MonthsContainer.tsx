@@ -1,16 +1,20 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Button } from '@/components/ui/button';
+import { Trash2 } from 'lucide-react';
+import Link from 'next/link';
 
 interface Month {
-    id: number;
-    name: string;
-    createdAt: Date;
-    expenses: number;
-    income: number;
-  }
+  id: number;
+  name: string;
+  createdAt: Date;
+  expenses: number;
+  income: number;
+}
 
-const MonthsContainer = () => {
+const MonthsContainer = ({ userId }: { userId: number }) => {
   const [months, setMonths] = useState<Month[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -18,7 +22,7 @@ const MonthsContainer = () => {
   useEffect(() => {
     const fetchMonths = async () => {
       try {
-        const response = await fetch('/api/months?userId=1');
+        const response = await fetch(`/api/months?userId=${userId}`);
         if (!response.ok) {
           throw new Error('Erro ao buscar os meses');
         }
@@ -33,7 +37,7 @@ const MonthsContainer = () => {
     };
 
     fetchMonths();
-  }, []);
+  }, [userId]);
 
   if (loading) {
     return <p>Carregando...</p>;
@@ -43,18 +47,56 @@ const MonthsContainer = () => {
     return <p>Erro: {error}</p>;
   }
 
+  const handleDeleteMonth = async (id: number) => {
+    try {
+      const response = await fetch(`/api/months/?monthId=${id}`, { method: 'DELETE' });
+      if (!response.ok) {
+        throw new Error('Erro ao deletar o mês');
+      }
+
+      setMonths(months.filter((month) => month.id !== id));
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {months.map((month) => (
         <Card key={month.id} className="hover:shadow-lg transition-shadow duration-300">
-          <CardHeader>
-            <CardTitle>{month.name} {new Date(month.createdAt).getFullYear()}</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle>{month.name}</CardTitle>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Trash2 className="h-4 w-4 text-red-500" />
+                  <span className="sr-only">Delete month</span>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete the {month.name} data.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => handleDeleteMonth(month.id)}>
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground mb-4">Click to view details</p>
+          <Link href={`/protected/expenses/${month.id}`}>
+              <p className="text-muted-foreground mb-4 cursor-pointer">Clique para ver mais informações</p>
+            </Link>
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-red-600">Vai sair: ${month.expenses}</span>
-              <span className="text-sm font-medium text-green-600">Entrou: ${month.income}</span>
+              <span className="text-sm font-medium text-red-600">Expenses: ${month.expenses}</span>
+              <span className="text-sm font-medium text-green-600">Income: ${month.income}</span>
             </div>
             <div className="mt-2">
               <div className="w-full bg-gray-200 rounded-full h-2.5">

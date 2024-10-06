@@ -28,11 +28,12 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const { id } = await req.json();
+  const { searchParams } = new URL(req.url);
+  const id = Number(searchParams.get('monthId'));
 
   try {
     await monthService.deleteMonth(id);
-    return NextResponse.json(null, { status: 204 });
+    return NextResponse.json(null, { status: 201 });
   } catch (err) {
     console.log(err);
     return NextResponse.json({ error: 'Erro ao deletar m s' }, { status: 500 });

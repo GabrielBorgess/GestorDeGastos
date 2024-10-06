@@ -15,6 +15,24 @@ export async function GET(req: Request) {
   }
 }
 
+export async function POST(req: Request) {
+  const { description, amount, monthId } = await req.json();
+
+  try {
+    const expense = await expenseService.createExpense(description, amount, monthId);
+    return new Response(JSON.stringify(expense), {
+      status: 201,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ error: 'Erro ao criar despesa' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+}
+
 export async function PUT(req: Request) {
   const { id, description, amount } = await req.json();
 
@@ -28,11 +46,12 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const { id } = await req.json();
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get('expenseId');
 
   try {
-    await expenseService.deleteExpense(id);
-    return NextResponse.json(null, { status: 204 });
+    await expenseService.deleteExpense(Number(id));
+    return NextResponse.json(null, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'Erro ao deletar despesa' }, { status: 500 });
