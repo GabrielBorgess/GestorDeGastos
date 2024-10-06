@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from "@/components/ui/card";
+import { Trash2 } from 'lucide-react';
 
 const DespesasPage = () => {
   const { id } = useParams();
@@ -95,39 +96,44 @@ const DespesasPage = () => {
   }
 
   return (
-    <Card>
+    <div className='m-6'>
+      <p className='m-6 font-semibold text-xl'>Despesas:</p>
       <CardContent>
         {despesas.map((despesa) => (
-          <div key={despesa.id} className="flex items-center justify-between mb-2">
-            <span>
-              {despesa.description} - R$ {despesa.amount.toFixed(2)}
-            </span>
-            <Button onClick={() => handleDeleteDespesa(despesa.id)} variant="destructive">
-              Deletar
+          <div key={despesa.id} className="flex items-center justify-between mb-4">
+            <div className='flex w-full justify-between'>
+              <p>{despesa.description}</p>
+              <p>R$ {despesa.amount.toFixed(2)}</p>
+            </div>
+            <Button onClick={() => handleDeleteDespesa(despesa.id)} variant='ghost'>
+              <Trash2 className="h-4 w-4 text-red-500" />
             </Button>
           </div>
         ))}
-        <p>Total das despesas: {despesas.reduce((total, despesa) => total + despesa.amount, 0)}</p>
-        <div className="mt-4">
+        <div className='mt-6 mb-6 flex justify-center flex-col text-center'>
+          <p className='font-semibold text-xl'>Total das despesas: </p>
+          <p>Aproximadamente: R${Math.floor(despesas.reduce((total, despesa) => total + despesa.amount, 0))}</p>
+        </div>
+        <div className="mt-4 flex-wrap flex gap-4 justify-center">
           <input
             type="text"
             placeholder="Descrição"
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
-            className="border p-2 mr-2"
+            className="rounded-lg border p-2 mr-2"
           />
           <input
             type="number"
             placeholder="Valor"
             value={valor}
             onChange={(e) => setValor(e.target.value ? parseFloat(e.target.value) : '')}
-            className="border p-2 mr-2"
+            className="rounded-lg border p-2 mr-2"
           />
-          <Button onClick={handleAddDespesa}>Adicionar Despesa</Button>
         </div>
+        <Button className='mt-4 flex w-full max-w-60 justify-center items-center text-center mx-auto' onClick={handleAddDespesa}>Adicionar Despesa</Button>
       </CardContent>
 
-    </Card>
+    </div>
   );
 };
 

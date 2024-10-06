@@ -92,11 +92,10 @@ const MonthsContainer = ({ userId }: { userId: number }) => {
           </CardHeader>
           <CardContent>
           <Link href={`/protected/expenses/${month.id}`}>
-              <p className="text-muted-foreground mb-4 cursor-pointer">Clique para ver mais informações</p>
+              <p className="text-muted-foreground mb-4 cursor-pointer">Clique aqui para ver mais informações</p>
             </Link>
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-red-600">Expenses: ${month.expenses}</span>
-              <span className="text-sm font-medium text-green-600">Income: ${month.income}</span>
+              <span className="text-sm font-medium text-green-600">Receita: R${month.income}</span>
             </div>
             <div className="mt-2">
               <div className="w-full bg-gray-200 rounded-full h-2.5">
