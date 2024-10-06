@@ -45,7 +45,6 @@ const AuthForm = () => {
 
     useEffect(() => {
         if (status === 'authenticated') {
-            console.log('User Session:', session?.user)
             router.refresh();
             router.push('/protected/dashboard');
         }
