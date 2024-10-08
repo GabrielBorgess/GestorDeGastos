@@ -25,9 +25,11 @@ export default async function HomePage() {
             <MonthsContainer userId={userId}      
             />
             
-            <Link href="/auth/signOut" className="font-semibold absolute w-svw bottom-5 text-center block px-4 py-2 text-gray-600 hover:text-gray-800">
+            <div className="fixed bottom-5 w-full flex justify-center">
+                <Link href="/auth/signOut" className="font-semibold px-4 py-2 text-gray-600 hover:text-gray-800 md:w-auto w-full  text-center block">
                     Log Out
                 </Link>
+            </div>
         </div>
     )
 }
