@@ -11,7 +11,8 @@ export default async function HomePage() {
     const userId = Number(session?.user?.id);
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 flex flex-col h-screen justify-between">
+            <div>
             <header className="flex justify-between items-center mb-8">
                 <h1 className="text-2xl font-bold">Olá {session?.user?.name}</h1>
                 <Link href={'/protected/createExpense'}>
@@ -24,8 +25,9 @@ export default async function HomePage() {
             
             <MonthsContainer userId={userId}      
             />
+            </div>
             
-            <div className="fixed bottom-5 w-full flex justify-center">
+            <div className="">
                 <Link href="/auth/signOut" className="font-semibold px-4 py-2 text-gray-600 hover:text-gray-800 md:w-auto w-full  text-center block">
                     Log Out
                 </Link>
