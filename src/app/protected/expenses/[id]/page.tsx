@@ -25,6 +25,7 @@ const DespesasPage = () => {
           }
           const data = await response.json();
           setDespesas(data);
+          console.log(data)
         } catch (error) {
           console.error(error);
           setError('Erro ao buscar despesas');
@@ -96,13 +97,16 @@ const DespesasPage = () => {
   }
 
   return (
-    <div className='m-6'>
-      <p className='m-6 font-semibold text-xl'>Despesas:</p>
+    <div className='m-2'>
+      <p className='m-6 font-semibold text-2xl'>Despesas:</p>
       <CardContent>
         {despesas.map((despesa) => (
-          <div key={despesa.id} className="flex items-center justify-between mb-4">
+          <div key={despesa.id} className="flex items-center justify-between mb-4 rounded-lg shadow-md p-4">
             <div className='flex w-full justify-between'>
-              <p>{despesa.description}</p>
+              <div>
+                <p className='font-medium'>{despesa.description}</p>
+                <p>{}</p>
+              </div>
               <p>R$ {despesa.amount.toFixed(2)}</p>
             </div>
             <Button onClick={() => handleDeleteDespesa(despesa.id)} variant='ghost'>
@@ -114,20 +118,20 @@ const DespesasPage = () => {
           <p className='font-semibold text-xl'>Total das despesas: </p>
           <p>Aproximadamente: R${Math.floor(despesas.reduce((total, despesa) => total + despesa.amount, 0))}</p>
         </div>
-        <div className="mt-4 flex-wrap flex gap-4 justify-center">
+        <div className="mt-4  flex gap-4 justify-center">
           <input
             type="text"
             placeholder="Descrição"
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
-            className="rounded-lg border p-2 mr-2"
+            className="rounded-lg border p-2"
           />
           <input
             type="number"
             placeholder="Valor"
             value={valor}
             onChange={(e) => setValor(e.target.value ? parseFloat(e.target.value) : '')}
-            className="rounded-lg border p-2 mr-2"
+            className="rounded-lg border p-2"
           />
         </div>
         <Button className='mt-4 flex w-full max-w-60 justify-center items-center text-center mx-auto' onClick={handleAddDespesa}>Adicionar Despesa</Button>
