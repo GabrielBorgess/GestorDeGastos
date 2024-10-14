@@ -26,8 +26,7 @@ async function main() {
         passwordHash: hashedPassword,
       },
     })
-    console.log({ admin })
-    console.log({ sofia })
+    console.log({ admin, sofia })
   }
   
   main()
