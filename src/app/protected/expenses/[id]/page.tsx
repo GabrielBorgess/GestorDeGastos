@@ -3,7 +3,6 @@
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { CardContent } from "@/components/ui/card";
 import { Trash2 } from 'lucide-react';
 
 const DespesasPage = () => {
@@ -99,21 +98,23 @@ const DespesasPage = () => {
   return (
     <div className='m-2'>
       <p className='m-6 font-semibold text-2xl'>Despesas:</p>
-      <CardContent>
+      <div className='m-6'>
+        <div className='flex flex-wrap gap-5 justify-center'>
         {despesas.map((despesa) => (
-          <div key={despesa.id} className="flex items-center justify-between mb-4 rounded-lg shadow-md p-4">
+          <div key={despesa.id} className="flex items-center justify-between mb-3 rounded-lg border border-stone-900 p-4 max-w-4xl">
             <div className='flex w-full justify-between'>
               <div>
-                <p className='font-medium'>{despesa.description}</p>
+                <p className='font-medium mr-2'>{despesa.description}</p>
                 <p>{}</p>
               </div>
-              <p>R$ {despesa.amount.toFixed(2)}</p>
+              <p className='font-semibold'>R$ {despesa.amount.toFixed(2)}</p>
             </div>
             <Button onClick={() => handleDeleteDespesa(despesa.id)} variant='ghost'>
               <Trash2 className="h-4 w-4 text-red-500" />
             </Button>
           </div>
         ))}
+        </div>
         <div className='mt-6 mb-6 flex justify-center flex-col text-center'>
           <p className='font-semibold text-xl'>Total das despesas: </p>
           <p>Aproximadamente: R${Math.floor(despesas.reduce((total, despesa) => total + despesa.amount, 0))}</p>
@@ -135,7 +136,7 @@ const DespesasPage = () => {
           />
         </div>
         <Button className='mt-4 flex w-full max-w-60 justify-center items-center text-center mx-auto' onClick={handleAddDespesa}>Adicionar Despesa</Button>
-      </CardContent>
+      </div>
 
     </div>
   );
