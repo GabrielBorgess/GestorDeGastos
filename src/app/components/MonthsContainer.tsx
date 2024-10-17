@@ -91,7 +91,7 @@ const MonthsContainer = ({ userId }: { userId: number }) => {
             </AlertDialog>
           </CardHeader>
           <CardContent>
-          <Link href={`/protected/expenses/${month.id}`}>
+            <Link href={`/protected/expenses/${month.id}`}>
               <p className="text-muted-foreground mb-4 cursor-pointer">Clique aqui para ver mais informações</p>
             </Link>
             <div className="flex justify-between items-center">

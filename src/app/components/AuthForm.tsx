@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 const AuthForm = () => {
     const router = useRouter();
 
-    const { data:session, status } = useSession();
+    const { data: session, status } = useSession();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
