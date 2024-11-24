@@ -2,8 +2,8 @@
 
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Trash2 } from 'lucide-react';
+ import { Button } from '@/components/ui/button';
+ import { Trash2 } from 'lucide-react';
 
 const DespesasPage = () => {
   const { id } = useParams();
@@ -96,48 +96,73 @@ const DespesasPage = () => {
   }
 
   return (
-    <div className='m-2'>
-      <p className='m-6 font-semibold text-2xl'>Despesas:</p>
-      <div className='m-6'>
-        <div className='flex flex-wrap gap-5 justify-center'>
-        {despesas.map((despesa) => (
-          <div key={despesa.id} className="flex items-center justify-between mb-3 rounded-lg border border-stone-900 p-4 max-w-4xl">
-            <div className='flex w-full justify-between'>
-              <div>
-                <p className='font-medium mr-2'>{despesa.description}</p>
-                <p>{}</p>
-              </div>
-              <p className='font-semibold'>R$ {despesa.amount.toFixed(2)}</p>
-            </div>
-            <Button onClick={() => handleDeleteDespesa(despesa.id)} variant='ghost'>
-              <Trash2 className="h-4 w-4 text-red-500" />
-            </Button>
-          </div>
-        ))}
-        </div>
-        <div className='mt-6 mb-6 flex justify-center flex-col text-center'>
-          <p className='font-semibold text-xl'>Total das despesas: </p>
-          <p>Aproximadamente: R${Math.floor(despesas.reduce((total, despesa) => total + despesa.amount, 0))}</p>
-        </div>
-        <div className="mt-4  flex gap-4 justify-center">
-          <input
-            type="text"
-            placeholder="Descrição"
-            value={descricao}
-            onChange={(e) => setDescricao(e.target.value)}
-            className="rounded-lg border p-2"
-          />
-          <input
-            type="number"
-            placeholder="Valor"
-            value={valor}
-            onChange={(e) => setValor(e.target.value ? parseFloat(e.target.value) : '')}
-            className="rounded-lg border p-2"
-          />
-        </div>
+    <div className="container mx-auto p-4">
+      <h2 className="text-2xl font-semibold mb-6">Despesas</h2>
+      <div className="overflow-x-auto">
+        <table className="table-auto w-full border-collapse border border-gray-300 shadow-md">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="border border-gray-300 px-4 py-2 text-left">Descrição</th>
+              <th className="border border-gray-300 px-4 py-2 text-right">Valor (R$)</th>
+              <th className="border border-gray-300 px-4 py-2 text-center">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {despesas.map((despesa) => (
+              <tr key={despesa.id} className="hover:bg-gray-50">
+                <td className="border border-gray-300 px-4 py-2">{despesa.description}</td>
+                <td className="border border-gray-300 px-4 py-2 text-right">
+                   {despesa.amount.toFixed(2)}
+                </td>
+                <td className="border border-gray-300 px-4 py-2 text-center">
+                  <button
+                    onClick={() => handleDeleteDespesa(despesa.id)}
+                    className="text-red-500 hover:text-red-600 font-semibold"
+                  >
+                    <Trash2 className="h-6 w-6 text-red-500 sm:hidden" />
+                    <span className="hidden sm:inline">Deletar</span>
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {despesas.length === 0 && (
+              <tr>
+                <td
+                  colSpan={4}
+                  className="text-center border border-gray-300 px-4 py-6 text-gray-500"
+                >
+                  Nenhuma despesa registrada
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="mt-6 flex flex-col items-center gap-4">
+        <input
+          type="text"
+          placeholder="Descrição"
+          value={descricao}
+          onChange={(e) => setDescricao(e.target.value)}
+          className="rounded-lg border p-2 w-full max-w-md"
+        />
+        <input
+          type="number"
+          placeholder="Valor"
+          value={valor}
+          onChange={(e) => setValor(e.target.value ? parseFloat(e.target.value) : '')}
+          className="rounded-lg border p-2 w-full max-w-md"
+        />
         <Button className='mt-4 flex w-full max-w-60 justify-center items-center text-center mx-auto' onClick={handleAddDespesa}>Adicionar Despesa</Button>
       </div>
 
+      <div className="mt-8 text-center">
+        <p className="font-semibold text-xl">Total das despesas</p>
+        <p className="text-lg">
+          R${despesas.reduce((total, despesa) => total + despesa.amount, 0).toFixed(2)}
+        </p>
+      </div>
     </div>
   );
 };
