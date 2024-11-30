@@ -96,7 +96,7 @@ const DespesasPage = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-16">
       <h2 className="text-2xl font-semibold mb-6">Despesas</h2>
       <div className="overflow-x-auto">
         <table className="table-auto w-full border-collapse border border-gray-300 shadow-md">
