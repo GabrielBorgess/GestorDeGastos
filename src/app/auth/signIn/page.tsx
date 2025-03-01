@@ -1,12 +1,12 @@
 import React from 'react'
-import AuthForm from '@/app/components/AuthForm'
+import AuthForm from '@/components/ui/AuthForm'
 
 const SignInPage = () => {
 
   return (
     <div className='flex flex-col justify-center items-center h-screen'>
       <div className='flex flex-col'>
-        {/* <h1 className='text-3xl font-bold p-4'>PETICIONADOR</h1> */}
+        <h1 className='text-3xl font-bold p-4'>Gestor de Gastos</h1>
       </div>
     <AuthForm />
     </div>
