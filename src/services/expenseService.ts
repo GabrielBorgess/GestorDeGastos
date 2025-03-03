@@ -1,4 +1,4 @@
-import prisma from "../lib/prisma";
+import prisma from "../app/lib/prisma";
 
 export const createExpense = async (description: string, amount: number, monthId: number) => {
     return await prisma.expense.create({

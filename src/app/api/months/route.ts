@@ -1,5 +1,4 @@
-// src/app/api/months/route.ts
-import * as monthService from '@/app/services/monthService';
+import { monthService } from '@/services/month';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
@@ -17,9 +16,10 @@ export async function GET(req: Request) {
 
 export async function PUT(req: Request) {
   const { id, name, income } = await req.json();
+  const data = { name, income };
 
   try {
-    const updatedMonth = await monthService.updateMonth(id, name, income);
+    const updatedMonth = await monthService.updateMonth(id, data);
     return NextResponse.json(updatedMonth, { status: 200 });
   } catch (err) {
     console.log(err);

@@ -1,5 +1,4 @@
-// src/app/api/expenses/route.ts
-import * as expenseService from '@/app/services/expenseService';
+import * as expenseService from '@/services/expenseService';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {

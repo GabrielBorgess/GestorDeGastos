@@ -1,4 +1,4 @@
-import { CreateMonthForm } from '@/app/components/CreateMonthForm'
+import { CreateMonthForm } from '@/components/forms/CreateMonthForm'
 import { authOptions } from '@/utils/authOptions';
 import { getServerSession } from 'next-auth';
 import Link from 'next/link'

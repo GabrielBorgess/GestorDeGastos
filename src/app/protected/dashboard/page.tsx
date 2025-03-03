@@ -2,7 +2,7 @@ import { PlusIcon } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/utils/authOptions';
-import MonthsContainer from '@/app/components/MonthsContainer'
+import MonthsContainer from '@/components/months/MonthsContainer'
 import Link from 'next/link'
 
 export default async function HomePage() {
