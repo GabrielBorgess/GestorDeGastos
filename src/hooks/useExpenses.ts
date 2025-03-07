@@ -1,7 +1,7 @@
 import { Exepnse } from "@/types/expenses"
 import { useEffect, useState } from "react"
 
-export const useExcenses = (monthId: string | number) => {
+export const useExpenses = (monthId: string | number | string[]) => {
 
     const [expenses, setExpenses] = useState<Exepnse[]>([]);
     const [loading, setLoading] = useState(true);
@@ -12,7 +12,7 @@ export const useExcenses = (monthId: string | number) => {
             console.log("Buscando despesas")
             fetchExpense();
         };
-    });
+    }, [monthId]);
 
     const fetchExpense = async () => {
         try {

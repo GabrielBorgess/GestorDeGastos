@@ -1,43 +1,26 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
- import { Button } from '@/components/ui/button';
- import { Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Trash2 } from 'lucide-react';
+import { useExpenses } from '@/hooks/useExpenses';
+
 
 const DespesasPage = () => {
   const { id } = useParams();
-  const [despesas, setDespesas] = useState<{ id: number; description: string; amount: number }[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const { 
+    expenses, 
+    loading, 
+    error, 
+    addExpense, 
+    deleteExpense, 
+    totalExpenses 
+  } = useExpenses(id);
+  
   const [descricao, setDescricao] = useState('');
   const [valor, setValor] = useState<number | ''>('');
 
-  //trazer despesas
-  useEffect(() => {
-    if (id) {
-      const fetchDespesas = async () => {
-        try {
-          const response = await fetch(`/api/expenses?monthId=${id}`);
-          if (!response.ok) {
-            throw new Error('Erro ao buscar despesas');
-          }
-          const data = await response.json();
-          setDespesas(data);
-          console.log(data)
-        } catch (error) {
-          console.error(error);
-          setError('Erro ao buscar despesas');
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchDespesas();
-    }
-  }, [id]);
-
-  //adicionar despesa
   const handleAddDespesa = async () => {
     if (!descricao || !valor) {
       alert('Preencha todos os campos');
@@ -45,45 +28,20 @@ const DespesasPage = () => {
     }
 
     try {
-      const response = await fetch('/api/expenses', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ monthId: Number(id), description: descricao, amount: parseFloat(String(valor)) }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao adicionar despesa');
-      }
-
-      const newDespesa = await response.json();
-      setDespesas((prevDespesas) => [...prevDespesas, newDespesa]);
-
+      await addExpense(descricao, Number(valor));
       setDescricao('');
       setValor('');
     } catch (error) {
       console.error(error);
-      setError('Erro ao adicionar despesa');
     }
   };
 
-  //deletar despesa
-  const handleDeleteDespesa = async (despesaId: number) => {
+  const handleDeleteExpense = async (despesaId: number) => {
     try {
-      const response = await fetch(`/api/expenses/?expenseId=${despesaId}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao deletar despesa');
-      }
-
-      console.log('Despesa deletada com sucesso');
-      setDespesas((prevDespesas) => prevDespesas.filter((despesa) => despesa.id !== despesaId));
+      await deleteExpense(despesaId);
     } catch (error) {
+      // O erro já foi tratado no hook
       console.error(error);
-      setError('Erro ao deletar despesa');
     }
   };
 
@@ -108,15 +66,15 @@ const DespesasPage = () => {
             </tr>
           </thead>
           <tbody>
-            {despesas.map((despesa) => (
-              <tr key={despesa.id} className="hover:bg-gray-50">
-                <td className="border border-gray-300 px-4 py-2">{despesa.description}</td>
+            {expenses.map((expense) => (
+              <tr key={expense.id} className="hover:bg-gray-50">
+                <td className="border border-gray-300 px-4 py-2">{expense.description}</td>
                 <td className="border border-gray-300 px-4 py-2 text-right">
-                   {despesa.amount.toFixed(2)}
+                  {expense.amount.toFixed(2)}
                 </td>
                 <td className="border border-gray-300 px-4 py-2 text-center">
                   <button
-                    onClick={() => handleDeleteDespesa(despesa.id)}
+                    onClick={() => handleDeleteExpense(expense.id)}
                     className="text-red-500 hover:text-red-600 font-semibold"
                   >
                     <Trash2 className="h-6 w-6 text-red-500 sm:hidden" />
@@ -125,7 +83,7 @@ const DespesasPage = () => {
                 </td>
               </tr>
             ))}
-            {despesas.length === 0 && (
+            {expenses.length === 0 && (
               <tr>
                 <td
                   colSpan={4}
@@ -154,13 +112,18 @@ const DespesasPage = () => {
           onChange={(e) => setValor(e.target.value ? parseFloat(e.target.value) : '')}
           className="rounded-lg border p-2 w-full max-w-md"
         />
-        <Button className='mt-4 flex w-full max-w-60 justify-center items-center text-center mx-auto' onClick={handleAddDespesa}>Adicionar Despesa</Button>
+        <Button 
+          className='mt-4 flex w-full max-w-60 justify-center items-center text-center mx-auto' 
+          onClick={handleAddDespesa}
+        >
+          Adicionar Despesa
+        </Button>
       </div>
 
       <div className="mt-8 text-center">
         <p className="font-semibold text-xl">Total das despesas</p>
         <p className="text-lg">
-          R${despesas.reduce((total, despesa) => total + despesa.amount, 0).toFixed(2)}
+          R${totalExpenses.toFixed(2)}
         </p>
       </div>
     </div>
