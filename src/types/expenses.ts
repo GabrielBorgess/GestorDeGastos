@@ -4,3 +4,9 @@ export interface Month {
     createdAt: Date;
     income: number;
   }
+
+export interface Exepnse {
+    id: number;
+    description: string;
+    amount: number;
+}
