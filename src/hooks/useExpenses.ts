@@ -1,5 +1,5 @@
 import { Exepnse } from "@/types/expenses"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 
 export const useExpenses = (monthId: string | number | string[]) => {
 
@@ -7,14 +7,7 @@ export const useExpenses = (monthId: string | number | string[]) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    useEffect(() => {
-        if (monthId) {
-            console.log("Buscando despesas")
-            fetchExpense();
-        };
-    }, [monthId]);
-
-    const fetchExpense = async () => {
+    const fetchExpense = useCallback(async () => {
         try {
             setLoading(true);
             const response = await fetch(`/api/expenses?monthId=${monthId}`);
@@ -25,14 +18,13 @@ export const useExpenses = (monthId: string | number | string[]) => {
             const data = await response.json();
             setExpenses(data);
 
-
         } catch (error) {
             console.error(error);
             setError('Erro ao buscar despesas');
         } finally {
             setLoading(false);
         };
-    };
+    }, [monthId]);
 
     const addExpense = async (descricao: string, valor: number) => {
         if (!descricao || !valor) {
@@ -94,6 +86,13 @@ export const useExpenses = (monthId: string | number | string[]) => {
         (total, expense) => total + expense.amount,
         0
     );
+
+    useEffect(() => {
+        if (monthId) {
+            console.log("Buscando despesas")
+            fetchExpense();
+        };
+    }, [monthId, fetchExpense]);
 
     return {
         expenses,
